@@ -110,6 +110,7 @@ def upload_image(image_path):
     url = f"https://api.cloudinary.com/v1_1/{cloud_name}/image/upload"
 
     data = {
+        "invalidate": "true",
         "overwrite": "true",
         "public_id": "daily_stock_update",
         "timestamp": str(int(time.time()))
