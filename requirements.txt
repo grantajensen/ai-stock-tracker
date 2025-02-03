@@ -1,0 +1,8 @@
+python-dotenv
+requests
+yfinance
+pillow
+os
+hashlib
+time
+datetime

@@ -1,0 +1,30 @@
+name: AI Stock Tracker
+
+on:
+  schedule:
+    - cron: '0 21 * * 1-5'  # Runs at 4 PM EST (21:00 UTC) Monday-Friday
+  workflow_dispatch:  # Allows manual runs from GitHub
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Create .env file
+        run: |
+          echo "CLOUD_NAME=${{ secrets.CLOUD_NAME }}" >> .env
+          echo "API_KEY=${{ secrets.API_KEY }}" >> .env
+          echo "API_SECRET=${{ secrets.API_SECRET }}" >> .env
+
+      - name: Run the script
+        run: python main.py
