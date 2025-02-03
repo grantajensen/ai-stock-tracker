@@ -2,6 +2,3 @@ python-dotenv
 requests
 yfinance
 pillow
-hashlib
-time
-datetime
