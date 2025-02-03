@@ -70,8 +70,8 @@ def generate_stock_image(stock_data):
 
         big_font_size = round((y2 - y1) * 0.17)
         little_font_size = round((y2 - y1) * 0.11)
-        big_font = ImageFont.truetype("Arial Bold.ttf", big_font_size)
-        little_font = ImageFont.truetype("Arial Bold.ttf", little_font_size)
+        big_font = ImageFont.truetype("fonts/arial-bold.ttf", big_font_size)
+        little_font = ImageFont.truetype("fonts/arial-bold.ttf", little_font_size)
 
         ticker_text = f"{ticker}"
         price_text = f"${data['price']:.2f}"
