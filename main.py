@@ -52,10 +52,16 @@ def generate_stock_image(stock_data):
 
     for i, (ticker, data) in enumerate(stock_data.items()):
         x1, y1, x2, y2 = positions[i]
-        if data["change"] >= 0:
+        if data["change"] >= 0.5:
             color = (101, 249, 93)
-        else:
+        elif data["change"] <= -0.5:
             color = (250, 103, 103)
+        elif data["change"] > 0 and data["change"] < 0.5:
+            color = (157, 247, 149)
+        elif data["change"] < 0 and data["change"] > -0.5:
+            color = (252, 130, 130)
+        else:
+            color = (220, 220, 220)
 
         draw.rectangle([x1, y1, x2, y2], fill=color, outline=(0,0,0,0), width=3)
         
