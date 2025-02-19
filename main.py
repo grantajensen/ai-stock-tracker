@@ -5,6 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 import datetime
 import hashlib
 import time
+from pandas.tseries.holiday import USFederalHolidayCalendar
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -15,12 +16,21 @@ api_secret = os.getenv("API_SECRET")
 
 TICKERS = ["AAPL", "NVDA", "MSFT", "AMD", "TSM", "AMZN", "GOOG", "META", "TSLA", "QQQ"]
 
+
+# Check if today is a holiday
+def is_holiday():
+    cal = USFederalHolidayCalendar()
+    holidays = cal.holidays()
+    today = datetime.date.today()
+    return today in holidays
+
+
 # Fetch stock data from Yahoo Finance
 def fetch_stock_data(tickers):
     stock_data = {}
     for ticker in tickers:
         stock = yf.Ticker(ticker)
-        hist = stock.history(period="2d")  # Get last two days to calculate change
+        hist = stock.history(period="2d")
         if len(hist) >= 2:
             last_close = hist.iloc[-2]["Close"]
             current_close = hist.iloc[-1]["Close"]
@@ -98,12 +108,14 @@ def generate_stock_image(stock_data):
     img.save(filename)
     return filename
 
+
 # Generate authentication signature for Cloudinary
 def generate_signature(data, api_secret):
     sorted_params = "&".join(f"{key}={data[key]}" for key in sorted(data))
     final_params = sorted_params + api_secret
     hash_object = hashlib.sha1(final_params.encode())
     return hash_object.hexdigest()
+
 
 # Upload image to Cloudinary
 def upload_image(image_path):
@@ -132,6 +144,7 @@ def upload_image(image_path):
 
 # Main script execution
 if __name__ == "__main__":
-    stock_data = fetch_stock_data(TICKERS)
-    image_path = generate_stock_image(stock_data)
-    image_link = upload_image(image_path)
+    if not is_holiday():
+        stock_data = fetch_stock_data(TICKERS)
+        image_path = generate_stock_image(stock_data)
+        image_link = upload_image(image_path)
